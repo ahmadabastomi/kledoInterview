@@ -22,8 +22,6 @@ const HomePage = ({
 
     const actionDeleteTransaction = async (id) => {
         await deleteTransaction({ id })
-        await getListTransactions({ name: '' })
-
     }
 
     const actionUpdateTransactionStatus = async (payload) => {

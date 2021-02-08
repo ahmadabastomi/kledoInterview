@@ -112,9 +112,11 @@ function* workerGetTransaction(action) {
 
 function* workerAddTransaction(action) {
     try {
-        const response = yield call(addTransaction, action.value.payload);
-        yield put({ type: ADD_TRANSACTION_SUCCESS, payload: response });
-        yield action.value.navigation.replace('HomePage')
+        const response1 = yield call(addTransaction, action.value.payload);
+        const response2 = yield call(fetchListTransactions, {name: ''});
+        yield put({ type: ADD_TRANSACTION_SUCCESS, payload: response1 });
+        yield put({ type: FETCH_LIST_TRANSACTIONS_SUCCESS, payload: response2 });
+        yield action.value.navigation.goBack()
     } catch (error) {
         yield put({ type: ADD_TRANSACTION_FAILED, error });
     }
@@ -122,9 +124,11 @@ function* workerAddTransaction(action) {
 
 function* workerUpdateTransaction(action) {
     try {
-        const response = yield call(updateTransaction, action.value.payload);
-        yield put({ type: UPDATE_TRANSACTION_SUCCESS, payload: response });
-        yield action.value.navigation.replace('HomePage')
+        const response1 = yield call(updateTransaction, action.value.payload);
+        const response2 = yield call(fetchListTransactions, {name: ''});
+        yield put({ type: UPDATE_TRANSACTION_SUCCESS, payload: response1 });
+        yield put({ type: FETCH_LIST_TRANSACTIONS_SUCCESS, payload: response2 });
+        yield action.value.navigation.goBack()
     } catch (error) {
         yield put({ type: UPDATE_TRANSACTION_FAILED, error });
     }
@@ -132,8 +136,10 @@ function* workerUpdateTransaction(action) {
 
 function* workerDeleteTransaction(action) {
     try {
-        const response = yield call(deleteTransaction, action.value);
-        yield put({ type: DELETE_TRANSACTION_SUCCESS, payload: response });
+        const response1 = yield call(deleteTransaction, action.value);
+        const response2 = yield call(fetchListTransactions, {name: ''});
+        yield put({ type: DELETE_TRANSACTION_SUCCESS, payload: response1 });
+        yield put({ type: FETCH_LIST_TRANSACTIONS_SUCCESS, payload: response2 });
     } catch (error) {
         yield put({ type: DELETE_TRANSACTION_FAILED, error });
     }
