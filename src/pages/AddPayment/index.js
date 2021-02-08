@@ -2,12 +2,20 @@ import React, {
     useState
 } from 'react'
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { connect } from 'react-redux'
 import { Header } from '../../components'
+import { addTransaction } from '../../redux/action'
 
-const AddPayment = ({ navigation }) => {
+const AddPayment = ({ navigation, addTransaction }) => {
     const [name, setName] = useState('')
     const handleChangeName = (value) => {
         setName(value)
+    }
+    const actionSaveTransaction = () => {
+        addTransaction({
+            payload: { data: { name } },
+            navigation
+        })
     }
     return (
         <View style={styles.pages}>
@@ -19,14 +27,22 @@ const AddPayment = ({ navigation }) => {
                     onChangeText={handleChangeName}
                 />
             </View>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={actionSaveTransaction}>
                 <Text style={styles.labelButton}>Simpan</Text>
             </TouchableOpacity>
         </View>
     )
 }
 
-export default AddPayment
+const mapStateToProps = state => ({
+})
+
+const mapDispatchToProps = dispatch => ({
+    addTransaction: data => dispatch(addTransaction(data))
+})
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddPayment)
 
 const styles = StyleSheet.create({
     pages: {

@@ -5,9 +5,17 @@ import React, {
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
 import { Header } from '../../components'
-import { getTransaction } from '../../redux/action'
+import { getTransaction, updateTransaction } from '../../redux/action'
 
-const ChangePayment = ({ navigation, route, getTransaction, isLoading, isError, dataTransaction }) => {
+const ChangePayment = ({
+    navigation,
+    route,
+    getTransaction,
+    isLoading,
+    isError,
+    dataTransaction,
+    updateTransaction
+}) => {
     const [name, setName] = useState(``)
 
     useEffect(() => {
@@ -18,10 +26,20 @@ const ChangePayment = ({ navigation, route, getTransaction, isLoading, isError, 
 
     useEffect(() => {
         setName(dataTransaction.name)
-    },[dataTransaction])
+    }, [dataTransaction])
 
     const handleChangeName = (value) => {
         setName(value)
+    }
+
+    const actionUpdateTransaction = async () => {
+        await updateTransaction({
+            payload: {
+                id: route.params.id,
+                data: { name }
+            },
+            navigation: navigation
+        })
     }
     return (
         <View style={styles.pages}>
@@ -39,7 +57,7 @@ const ChangePayment = ({ navigation, route, getTransaction, isLoading, isError, 
                             onChangeText={handleChangeName}
                         />
                     </View>
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity style={styles.button} onPress={actionUpdateTransaction}>
                         <Text style={styles.labelButton}>Simpan</Text>
                     </TouchableOpacity>
                 </View>}
@@ -55,6 +73,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     getTransaction: data => dispatch(getTransaction(data)),
+    updateTransaction: data => dispatch(updateTransaction(data))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChangePayment)

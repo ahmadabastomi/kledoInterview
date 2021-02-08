@@ -22,6 +22,7 @@ import {
 } from '../../config'
 
 
+
 export const transactionsWatcher = [
     takeLatest(FETCH_LIST_TRANSACTIONS, workerGetListTransactions),
     takeLatest(FETCH_TRANSACTION, workerGetTransaction),
@@ -31,7 +32,7 @@ export const transactionsWatcher = [
     takeLatest(UPDATE_TRANSACTION_STATUS, workerUpdateTransactionStatus),
 ]
 
-const getListTransactions = async () => {
+const fetchListTransactions = async () => {
     try {
         const response = await axios.get(`https://api.jokolodang.com/api/v1/payments`);
         return response;
@@ -53,7 +54,7 @@ const getTransaction = async (body) => {
 const addTransaction = async (body) => {
     const {data} = body
     try {
-        const response = await axios.post(`https://api.jokolodang.com/api/v1/payments/${id}`,data);
+        const response = await axios.post(`https://api.jokolodang.com/api/v1/payments`,data);
         return response;
     } catch (error) {
         console.log(error)
@@ -92,7 +93,7 @@ const updateTransactionStatus = async (body) => {
 
 function* workerGetListTransactions(action) {
     try {
-        const response = yield call(getListTransactions, action.value);
+        const response = yield call(fetchListTransactions);
         yield put({ type: FETCH_LIST_TRANSACTIONS_SUCCESS, payload: response });
     } catch (error) {
         yield put({ type: FETCH_LIST_TRANSACTIONS_FAILED, error });
@@ -110,8 +111,9 @@ function* workerGetTransaction(action) {
 
 function* workerAddTransaction(action) {
     try {
-        const response = yield call(addTransaction, action.value);
+        const response = yield call(addTransaction, action.value.payload);
         yield put({ type: ADD_TRANSACTION_SUCCESS, payload: response });
+        yield action.value.navigation.replace('HomePage')
     } catch (error) {
         yield put({ type: ADD_TRANSACTION_FAILED, error });
     }
@@ -119,8 +121,9 @@ function* workerAddTransaction(action) {
 
 function* workerUpdateTransaction(action) {
     try {
-        const response = yield call(updateTransaction, action.value);
+        const response = yield call(updateTransaction, action.value.payload);
         yield put({ type: UPDATE_TRANSACTION_SUCCESS, payload: response });
+        yield action.value.navigation.replace('HomePage')
     } catch (error) {
         yield put({ type: UPDATE_TRANSACTION_FAILED, error });
     }
