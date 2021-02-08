@@ -1,38 +1,26 @@
 import React, { useEffect } from 'react'
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
-import { FlatList } from 'react-native-gesture-handler'
+import { ActivityIndicator, StyleSheet, View } from 'react-native'
+import { FloatingAction } from "react-native-floating-action";
 import { connect } from 'react-redux'
+import { Header, ListItem } from '../../components'
 import { getNewsData } from '../../redux/action'
 
-const HomePage = ({
-    isLoading,
-    data,
-    getNewsData
-}) => {
+const HomePage = ({navigation}) => {
     useEffect(() => {
-        getNewsData({ page: 1 })
+        // getNewsData({ page: 1 })
     }, [])
 
     return (
         <View style={styles.pages}>
-            {
-                isLoading ?
-                    <View style={styles.contentLoading}>
-                        <ActivityIndicator size={50} color='red'/>
-                    </View>
-                    :
-                    <View>
-                        <FlatList
-                            data={data}
-                            keyExtractor={(item) => item.title}
-                            renderItem={({ item }) => (
-                                <View>
-                                    <Text>{item.title}</Text>
-                                </View>
-                            )}
-                        />
-                    </View>
-            }
+            <Header title="Pembayaran" onHome={true} />
+            <View style={styles.container}>
+                <ListItem />
+            </View>
+            <FloatingAction
+            animated={false}
+            showBackground={false}
+            onPressMain={() => navigation.navigate('AddPayment')}
+            />
         </View>
     )
 }
@@ -51,7 +39,10 @@ export default connect(mapStateToProps, mapDispatchToProps)(HomePage)
 const styles = StyleSheet.create({
     pages: {
         flex: 1,
-        padding: 30
+        padding: 16
+    },
+    container: {
+        marginTop: 20
     },
     contentLoading: {
         flex: 1,
