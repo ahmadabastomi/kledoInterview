@@ -2,16 +2,25 @@ import React, {
     useState
 } from 'react'
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { connect } from 'react-redux'
+import {
+    getListTransactions
+} from '../../redux/action'
 import { Header } from '../../components'
 
-const FilterPayment = ({ navigation }) => {
+const FilterPayment = ({ navigation,getListTransactions }) => {
     const [name, setName] = useState('')
     const handleChangeName = (value) => {
         setName(value)
     }
+
+    const actionFilterTransactions =  async () => {
+        await getListTransactions({name})
+        await navigation.goBack()
+    }
     return (
         <View style={styles.pages}>
-            <Header title="Tambah Pembayan" onHome={false} actionBack={() => navigation.goBack()} />
+            <Header title="Filter Pembayaran" onHome={false} actionBack={() => navigation.goBack()} />
             <View style={styles.content}>
                 <Text style={styles.label}>Nama</Text>
                 <TextInput style={styles.textInput}
@@ -19,14 +28,21 @@ const FilterPayment = ({ navigation }) => {
                     onChangeText={handleChangeName}
                 />
             </View>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={actionFilterTransactions}>
                 <Text style={styles.labelButton}>Terapkan</Text>
             </TouchableOpacity>
         </View>
     )
 }
 
-export default FilterPayment
+const mapStateToProps = state => ({
+})
+
+const mapDispatchToProps = dispatch => ({
+    getListTransactions: data => dispatch(getListTransactions(data))
+})
+
+export default connect(mapStateToProps,mapDispatchToProps)(FilterPayment)
 
 const styles = StyleSheet.create({
     pages: {
@@ -56,7 +72,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     labelButton: {
-        color: 'white',
+        color: 'black',
         fontSize: 14,
         fontWeight: 'bold'
     }

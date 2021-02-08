@@ -3,14 +3,14 @@ import { StyleSheet, Text, View } from 'react-native'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { ICArrowBack, ICFilter } from '../../../assets'
 
-const Header = ({ title, actionBack, onHome }) => {
+const Header = ({ title, actionBack, onHome, actionFilter }) => {
     return (
         <View style={styles.container}>
             {!onHome && <TouchableWithoutFeedback onPress={actionBack != null ? actionBack : null}>
                 <ICArrowBack />
             </TouchableWithoutFeedback>}
             <Text style={styles.titleHeader}>{title}</Text>
-            { onHome && <TouchableWithoutFeedback>
+            { onHome && <TouchableWithoutFeedback onPress={actionFilter}>
                 <View style={styles.contentFilter}>
                     <ICFilter />
                 </View>

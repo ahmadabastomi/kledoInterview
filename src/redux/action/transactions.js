@@ -7,7 +7,7 @@ import {
     UPDATE_TRANSACTION_STATUS
 } from '../config'
 
-export const getListTransactions = () => ({ type: FETCH_LIST_TRANSACTIONS})
+export const getListTransactions = value => ({ type: FETCH_LIST_TRANSACTIONS, value})
 export const getTransaction = value => ({ type: FETCH_TRANSACTION, value })
 export const addTransaction = value => ({ type: ADD_TRANSACTION, value })
 export const updateTransaction = value => ({ type: UPDATE_TRANSACTION, value })

@@ -12,7 +12,9 @@ const HomePage = ({
     dataTransactions,
     getListTransactions }) => {
     useEffect(() => {
-        getListTransactions()
+        getListTransactions({
+            name: ''
+        })
     }, [])
 
     return (
@@ -23,15 +25,16 @@ const HomePage = ({
                 </View>
                 :
                 <View style={styles.flex}>
-                    <Header title="Pembayaran" onHome={true} />
+                    <Header title="Pembayaran" onHome={true} 
+                    actionFilter={() => navigation.navigate('FilterPayment')}/>
                     <View style={styles.container}>
                         <FlatList
                             data={dataTransactions}
                             keyExtractor={(item) => item.id.toString()}
                             renderItem={({ item }) => (
-                                <ListItem 
-                                title={item.name}
-                                actionEdit={() => navigation.navigate('ChangePayment',{id: item.id})}
+                                <ListItem
+                                    title={item.name}
+                                    actionEdit={() => navigation.navigate('ChangePayment', { id: item.id })}
                                 />
                             )}
                         />
@@ -53,7 +56,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    getListTransactions: () => dispatch(getListTransactions())
+    getListTransactions: data => dispatch(getListTransactions(data))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage)

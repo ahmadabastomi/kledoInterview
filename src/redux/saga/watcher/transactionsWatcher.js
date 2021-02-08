@@ -32,9 +32,10 @@ export const transactionsWatcher = [
     takeLatest(UPDATE_TRANSACTION_STATUS, workerUpdateTransactionStatus),
 ]
 
-const fetchListTransactions = async () => {
+const fetchListTransactions = async (body) => {
+    const { name } = body
     try {
-        const response = await axios.get(`https://api.jokolodang.com/api/v1/payments`);
+        const response = await axios.get(`https://api.jokolodang.com/api/v1/payments?name=${name}`);
         return response;
     } catch (error) {
         console.log(error)
@@ -93,7 +94,7 @@ const updateTransactionStatus = async (body) => {
 
 function* workerGetListTransactions(action) {
     try {
-        const response = yield call(fetchListTransactions);
+        const response = yield call(fetchListTransactions, action.value);
         yield put({ type: FETCH_LIST_TRANSACTIONS_SUCCESS, payload: response });
     } catch (error) {
         yield put({ type: FETCH_LIST_TRANSACTIONS_FAILED, error });
