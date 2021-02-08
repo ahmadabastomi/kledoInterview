@@ -43,7 +43,7 @@ const ChangePayment = ({
     }
     return (
         <View style={styles.pages}>
-            <Header title="Ubah Pembayan" onHome={false} actionBack={() => navigation.goBack()} />
+            <Header title="Ubah Pembayaran" onHome={false} actionBack={() => navigation.goBack()} />
             { isLoading ?
                 <View style={styles.contentLoading}>
                     <ActivityIndicator size={50} color="blue" />
