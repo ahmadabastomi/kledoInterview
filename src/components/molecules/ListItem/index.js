@@ -2,10 +2,10 @@ import React from 'react'
 import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { ICRightArrow } from '../../../assets'
 
-const ListItem = ({ title, actionEdit }) => {
+const ListItem = ({ title, actionEdit, isActive }) => {
     return (
         <View style={styles.container}>
-            <Text style={styles.textItem}>{title}</Text>
+            <Text style={styles.textItem(isActive)}>{title}</Text>
             <View style={styles.nextButton}>
                 <TouchableWithoutFeedback onPress={actionEdit}>
                     <ICRightArrow />
@@ -23,10 +23,12 @@ const styles = StyleSheet.create({
         borderBottomColor: 'darkgrey',
         paddingVertical: 20,
         flexDirection: 'row',
+        backgroundColor: 'white'
     },
-    textItem: {
-        fontSize: 16
-    },
+    textItem: (isActive) =>({
+        fontSize: 16,
+        color: isActive === 1? 'blue': 'black'
+    }),
     nextButton: {
         marginLeft: 'auto',
     }

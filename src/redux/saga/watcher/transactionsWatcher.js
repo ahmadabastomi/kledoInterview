@@ -141,8 +141,10 @@ function* workerDeleteTransaction(action) {
 
 function* workerUpdateTransactionStatus(action) {
     try {
-        const response = yield call(updateTransactionStatus, action.value);
-        yield put({ type: UPDATE_TRANSACTION_STATUS_SUCCESS, payload: response });
+        const response1 = yield call(updateTransactionStatus, action.value);
+        const response2 = yield call(fetchListTransactions, {name: ''});
+        yield put({ type: UPDATE_TRANSACTION_STATUS_SUCCESS, payload: response1 });
+        yield put({ type: FETCH_LIST_TRANSACTIONS_SUCCESS, payload: response2 });
     } catch (error) {
         yield put({ type: UPDATE_TRANSACTION_STATUS_FAILED, error });
     }

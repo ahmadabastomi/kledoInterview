@@ -22,7 +22,8 @@ import {
 const initialState = {
     dataTransactions: [],
     dataTransaction: {
-        name: ''
+        name: '',
+        is_active: 0
     },
     isLoading: false,
     isError: false
