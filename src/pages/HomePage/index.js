@@ -1,37 +1,59 @@
 import React, { useEffect } from 'react'
-import { ActivityIndicator, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native'
 import { FloatingAction } from "react-native-floating-action";
 import { connect } from 'react-redux'
 import { Header, ListItem } from '../../components'
-import { getNewsData } from '../../redux/action'
+import { getListTransactions } from '../../redux/action'
 
-const HomePage = ({navigation}) => {
+const HomePage = ({
+    navigation,
+    isLoading,
+    isError,
+    dataTransactions,
+    getListTransactions }) => {
     useEffect(() => {
-        // getNewsData({ page: 1 })
+        getListTransactions()
     }, [])
 
     return (
         <View style={styles.pages}>
-            <Header title="Pembayaran" onHome={true} />
-            <View style={styles.container}>
-                <ListItem />
-            </View>
-            <FloatingAction
-            animated={false}
-            showBackground={false}
-            onPressMain={() => navigation.navigate('AddPayment')}
-            />
+            {isLoading ?
+                <View style={styles.contentLoading}>
+                    <ActivityIndicator size={50} color="blue" />
+                </View>
+                :
+                <View style={styles.flex}>
+                    <Header title="Pembayaran" onHome={true} />
+                    <View style={styles.container}>
+                        <FlatList
+                            data={dataTransactions}
+                            keyExtractor={(item) => item.id.toString()}
+                            renderItem={({ item }) => (
+                                <ListItem 
+                                title={item.name}
+                                actionEdit={() => navigation.navigate('ChangePayment',{id: item.id})}
+                                />
+                            )}
+                        />
+                    </View>
+                    <FloatingAction
+                        animated={false}
+                        showBackground={false}
+                        onPressMain={() => navigation.navigate('AddPayment')}
+                    />
+                </View>}
         </View>
     )
 }
 
 const mapStateToProps = state => ({
-    data: state.news.data,
-    isLoading: state.news.isLoading
+    dataTransactions: state.transactions.dataTransactions,
+    isLoading: state.transactions.isLoading,
+    isError: state.transactions.isError
 })
 
 const mapDispatchToProps = dispatch => ({
-    getNewsData: data => dispatch(getNewsData(data))
+    getListTransactions: () => dispatch(getListTransactions())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage)
@@ -48,5 +70,8 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    flex: {
+        flex: 1
     }
 })

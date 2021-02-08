@@ -1,10 +1,16 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { ICRightArrow } from '../../../assets'
 
-const ListItem = () => {
+const ListItem = ({ title, actionEdit }) => {
     return (
         <View style={styles.container}>
-            <Text style={styles.textItem}>List Item Component</Text>
+            <Text style={styles.textItem}>{title}</Text>
+            <View style={styles.nextButton}>
+                <TouchableWithoutFeedback onPress={actionEdit}>
+                    <ICRightArrow />
+                </TouchableWithoutFeedback>
+            </View>
         </View>
     )
 }
@@ -16,9 +22,12 @@ const styles = StyleSheet.create({
         borderBottomWidth: 0.5,
         borderBottomColor: 'darkgrey',
         paddingVertical: 20,
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
     textItem: {
         fontSize: 16
+    },
+    nextButton: {
+        marginLeft: 'auto',
     }
 })

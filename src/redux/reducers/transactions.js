@@ -21,7 +21,9 @@ import {
 
 const initialState = {
     dataTransactions: [],
-    dataTransaction: {},
+    dataTransaction: {
+        name: ''
+    },
     isLoading: false,
     isError: false
 }
@@ -45,7 +47,7 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 isError: false,
-                dataTransactions: action.payload.data
+                dataTransactions: action.payload.data.data
             }
         case FETCH_TRANSACTION:
             return {
@@ -64,7 +66,7 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 isError: false,
-                dataTransaction: action.payload.data
+                dataTransaction: action.payload.data.data
             }
         case ADD_TRANSACTION:
             return {

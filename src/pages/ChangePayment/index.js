@@ -1,32 +1,63 @@
 import React, {
-    useState
+    useState,
+    useEffect
 } from 'react'
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, ActivityIndicator } from 'react-native'
+import { connect } from 'react-redux'
 import { Header } from '../../components'
+import { getTransaction } from '../../redux/action'
 
-const ChangePayment = ({ navigation }) => {
-    const [name, setName] = useState('')
+const ChangePayment = ({ navigation, route, getTransaction, isLoading, isError, dataTransaction }) => {
+    const [name, setName] = useState(``)
+
+    useEffect(() => {
+        getTransaction({
+            id: route.params.id
+        })
+    }, [])
+
+    useEffect(() => {
+        setName(dataTransaction.name)
+    },[dataTransaction])
+
     const handleChangeName = (value) => {
         setName(value)
     }
     return (
         <View style={styles.pages}>
             <Header title="Ubah Pembayan" onHome={false} actionBack={() => navigation.goBack()} />
-            <View style={styles.content}>
-                <Text style={styles.label}>Nama</Text>
-                <TextInput style={styles.textInput}
-                    value={name}
-                    onChangeText={handleChangeName}
-                />
-            </View>
-            <TouchableOpacity style={styles.button}>
-                <Text style={styles.labelButton}>Simpan</Text>
-            </TouchableOpacity>
+            { isLoading ?
+                <View style={styles.contentLoading}>
+                    <ActivityIndicator size={50} color="blue" />
+                </View>
+                :
+                <View style={styles.flex}>
+                    <View style={styles.content}>
+                        <Text style={styles.label}>Nama</Text>
+                        <TextInput style={styles.textInput}
+                            value={name}
+                            onChangeText={handleChangeName}
+                        />
+                    </View>
+                    <TouchableOpacity style={styles.button}>
+                        <Text style={styles.labelButton}>Simpan</Text>
+                    </TouchableOpacity>
+                </View>}
         </View>
     )
 }
 
-export default ChangePayment
+const mapStateToProps = state => ({
+    dataTransaction: state.transactions.dataTransaction,
+    isLoading: state.transactions.isLoading,
+    isError: state.transactions.isError
+})
+
+const mapDispatchToProps = dispatch => ({
+    getTransaction: data => dispatch(getTransaction(data)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChangePayment)
 
 const styles = StyleSheet.create({
     pages: {
@@ -59,5 +90,13 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 14,
         fontWeight: 'bold'
-    }
+    },
+    flex: {
+        flex: 1
+    },
+    contentLoading: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
 })
