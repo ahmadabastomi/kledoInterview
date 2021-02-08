@@ -3,7 +3,7 @@ import { ActivityIndicator, FlatList, StyleSheet, View, Text, TouchableOpacity }
 import { FloatingAction } from "react-native-floating-action";
 import { connect } from 'react-redux'
 import { Header, ListItem } from '../../components'
-import { getListTransactions, deleteTransaction,updateTransactionStatus } from '../../redux/action'
+import { getListTransactions, deleteTransaction, updateTransactionStatus } from '../../redux/action'
 import { SwipeListView } from 'react-native-swipe-list-view'
 
 const HomePage = ({
@@ -38,36 +38,41 @@ const HomePage = ({
                 <View style={styles.flex}>
                     <Header title="Pembayaran" onHome={true}
                         actionFilter={() => navigation.navigate('FilterPayment')} />
-                    <View style={styles.container}>
-                        <SwipeListView
-                            useFlatList={true}
-                            keyExtractor={(item) => item.id.toString()}
-                            data={dataTransactions}
-                            renderItem={({ item }) => (
-                                <ListItem
-                                    title={item.name}
-                                    isActive={item.is_active}
-                                    actionEdit={() => navigation.navigate('ChangePayment', { id: item.id })}
-                                />
-                            )}
-                            renderHiddenItem={({ item }) => (
-                                <View style={styles.rowBack}>
-                                    <TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnLeft(item.is_active)]}
-                                    onPress={() => actionUpdateTransactionStatus({
-                                        id: item.id,
-                                        status: item.is_active === 1 ? 'deactivate' : 'activate'
-                                    })}>
-                                        <Text style={styles.textButton}>{item.is_active === 1 ? 'Deactivate' : 'Activate'}</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnRight]}
-                                        onPress={() => actionDeleteTransaction(item.id)}>
-                                        <Text style={styles.textButton}>Delete</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            )}
-                            leftOpenValue={150}
-                        />
-                    </View>
+                    {isError || dataTransactions.length === 0 ?
+                        <View style={styles.contentLoading}>
+                            <Text>Data Tidak Ditemukan</Text>
+                        </View>
+                        :
+                        <View style={styles.container}>
+                            <SwipeListView
+                                useFlatList={true}
+                                keyExtractor={(item) => item.id.toString()}
+                                data={dataTransactions}
+                                renderItem={({ item }) => (
+                                    <ListItem
+                                        title={item.name}
+                                        isActive={item.is_active}
+                                        actionEdit={() => navigation.navigate('ChangePayment', { id: item.id })}
+                                    />
+                                )}
+                                renderHiddenItem={({ item }) => (
+                                    <View style={styles.rowBack}>
+                                        <TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnLeft(item.is_active)]}
+                                            onPress={() => actionUpdateTransactionStatus({
+                                                id: item.id,
+                                                status: item.is_active === 1 ? 'deactivate' : 'activate'
+                                            })}>
+                                            <Text style={styles.textButton}>{item.is_active === 1 ? 'Deactivate' : 'Activate'}</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnRight]}
+                                            onPress={() => actionDeleteTransaction(item.id)}>
+                                            <Text style={styles.textButton}>Delete</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
+                                leftOpenValue={150}
+                            />
+                        </View>}
                     <FloatingAction
                         animated={false}
                         showBackground={false}

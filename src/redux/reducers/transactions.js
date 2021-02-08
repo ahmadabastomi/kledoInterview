@@ -16,7 +16,8 @@ import {
     DELETE_TRANSACTION_SUCCESS,
     UPDATE_TRANSACTION_STATUS,
     UPDATE_TRANSACTION_STATUS_FAILED,
-    UPDATE_TRANSACTION_STATUS_SUCCESS
+    UPDATE_TRANSACTION_STATUS_SUCCESS,
+    SET_FILTER_VALUE
 } from '../config'
 
 const initialState = {
@@ -26,7 +27,8 @@ const initialState = {
         is_active: 0
     },
     isLoading: false,
-    isError: false
+    isError: false,
+    filterValue: ''
 }
 
 export default (state = initialState, action) => {
@@ -140,6 +142,11 @@ export default (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 isError: false,
+            }
+        case SET_FILTER_VALUE:
+            return {
+                ...state,
+                filterValue: action.value
             }
         default:
             return state

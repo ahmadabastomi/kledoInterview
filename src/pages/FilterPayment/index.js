@@ -4,18 +4,20 @@ import React, {
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { connect } from 'react-redux'
 import {
-    getListTransactions
+    getListTransactions,
+    setFilterValue
 } from '../../redux/action'
 import { Header } from '../../components'
 
-const FilterPayment = ({ navigation,getListTransactions }) => {
-    const [name, setName] = useState('')
+const FilterPayment = ({ navigation, getListTransactions, setFilterValue, filterValue }) => {
+    const [name, setName] = useState(filterValue)
     const handleChangeName = (value) => {
         setName(value)
     }
 
-    const actionFilterTransactions =  async () => {
-        await getListTransactions({name})
+    const actionFilterTransactions = async () => {
+        await getListTransactions({ name })
+        await setFilterValue(name)
         await navigation.goBack()
     }
     return (
@@ -36,13 +38,15 @@ const FilterPayment = ({ navigation,getListTransactions }) => {
 }
 
 const mapStateToProps = state => ({
+    filterValue: state.transactions.filterValue
 })
 
 const mapDispatchToProps = dispatch => ({
-    getListTransactions: data => dispatch(getListTransactions(data))
+    getListTransactions: data => dispatch(getListTransactions(data)),
+    setFilterValue: data => dispatch(setFilterValue(data))
 })
 
-export default connect(mapStateToProps,mapDispatchToProps)(FilterPayment)
+export default connect(mapStateToProps, mapDispatchToProps)(FilterPayment)
 
 const styles = StyleSheet.create({
     pages: {
